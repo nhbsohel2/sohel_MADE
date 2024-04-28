@@ -56,7 +56,7 @@ pipeline flugPipeline {
 	// 10. Next, we interpret the text file as sheet.
 	// A sheet only contains text cells and is useful for manipulating the shape of data before assigning more strict value types to cells.
 	block flugCSVInterpreter oftype CSVInterpreter {
-		//enclosing: '';
+		enclosing: '';
 		delimiter:';';
 	}
 
@@ -79,18 +79,18 @@ pipeline flugPipeline {
 		header: true;
 		columns: [
 			"Lfd. Nummer" oftype integer,
-"Name des Flughafens" oftype text,
-"Ort" oftype text,
-"Land" oftype text,
-"IATA" oftype text,
-"ICAO" oftype text,
-"Latitude" oftype text,
-"Longitude" oftype text,
-"Altitude" oftype integer,
-"Zeitzone" oftype decimal,
-"DST" oftype text,
-"Zeitzonen-Datenbank" oftype text,
-"geo_punkt" oftype text
+			"Name des Flughafens" oftype text,
+			"Ort" oftype text,
+			"Land" oftype text,
+			"IATA" oftype text,
+			"ICAO" oftype text,
+			"Latitude" oftype decimal,
+			"Longitude" oftype decimal,
+			"Altitude" oftype integer,
+			"Zeitzone" oftype decimal,
+			"DST" oftype text,
+			"Zeitzonen-Datenbank" oftype text,
+			"geo_punkt" oftype text
 
 		];
 	}
