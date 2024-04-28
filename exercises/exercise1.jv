@@ -101,7 +101,7 @@ pipeline flugPipeline {
 	// to generate the correct table.
 	block flugLoader oftype SQLiteLoader {
 		table: "flug";
-		file: "./flug.sqlite";
+		file: "./airports.sqlite";
 	}
 
 	// 16. Congratulations!
