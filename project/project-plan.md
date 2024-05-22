@@ -2,33 +2,33 @@
 
 ## Title
 
- Economic Impact of Climate Change on Agriculture
+ Economic Impact of Climate Change(temperature) on Agricultural productivity in europe.
 
 ## Main Question
 
 
-Assess how climate change is affecting agricultural productivity and the economy.
+Assess how temperature change is affecting agricultural productivity and the economy in european countries.
 
 ## Description
 
 
-Climate change poses a significant threat to global agriculture, affecting crop yields and economic stability. This project aims to analyze the impact of climate change on agricultural productivity by examining the relationship between climate variables and crop yields over time. Using datasets from the European Data Portal and GovData, we will correlate changes in temperature and precipitation with agricultural output. The results will provide insights into the economic consequences of climate variability and inform strategies for mitigating adverse effects on agriculture.
+Climate change poses a significant threat to global agriculture, affecting crop yields and economic stability. This project aims to analyze the impact of climate change (temperature)on agricultural productivity by examining the relationship between climate variables and production value over time. Using datasets from the kaggle, we will correlate changes in temperature and precipitation with agricultural output. The results will provide insights into the economic consequences of climate variability and inform strategies for mitigating adverse effects on agriculture.
 
 ## Datasources
 
 ### Datasource1:
-* Metadata URL: https://data.europa.eu/data/datasets?locale=en
-* Data URL: https://ec.europa.eu/eurostat/databrowser/view/tag00047/default/table?lang=en
+* Metadata URL:  https://www.kaggle.com/datasets/unitednations/global-food-agriculture-statistics
+* Data URL: https://www.kaggle.com/datasets/unitednations/global-food-agriculture-statistics?select=fao_data_production_indices_data.csv
 * Data Type: CSV
 
-This dataset contains detailed statistics on crop production across various European countries. It includes data on different types of crops, their yields, and production areas.
+This dataset contains detailed statistics on crop production across various countries.We will use only european countries data.
 
 ### Datasource2:
-* Metadata URL: https://www.govdata.de/web/guest/suchen/-/details/climate-data-germany
-* Data URL: https://opendata.dwd.de/climate_environment/CDC/observations_germany/climate/monthly/kl/historical/
+* Metadata URL: https://www.kaggle.com/datasets/berkeleyearth/climate-change-earth-surface-temperature-data
+* Data URL: https://www.kaggle.com/datasets/berkeleyearth/climate-change-earth-surface-temperature-data?select=GlobalLandTemperaturesByCountry.csv
 * Data Type: CSV
 
-This dataset provides historical climate data for Germany, including temperature, precipitation, and other weather-related variables. It offers a comprehensive view of climatic conditions over time.
+This dataset provides global land temperature. It offers a comprehensive view of climatic conditions over time.We will use data for european countries.
 
 ## Work Packages
 
