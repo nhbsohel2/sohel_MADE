@@ -48,7 +48,7 @@ def load_data_from_sqlite(table_name, db_path='../data/temperature.sqlite'):
 def download_kaggle_dataset(dataset_name, username, key):
     # Initialize Kaggle API
     api = KaggleApi()
-   # api.authenticate(username="nhbsohel", key="351073502779b168259267ec2964a09a")
+   # api.authenticate(username=username, key=key)
 
     # Download dataset
     api.dataset_download_files(dataset_name, unzip=True)
@@ -76,8 +76,8 @@ def download_kaggle_dataset(dataset_name, username, key):
 
 def main():
     # Kaggle credentials
-    username = "your_kaggle_username"
-    key = "your_kaggle_key"
+    username = "nhbsohel"
+    key = "351073502779b168259267ec2964a09a"
 
     # Download Kaggle dataset and get unique countries
     dataset_name = "unitednations/global-food-agriculture-statistics"
