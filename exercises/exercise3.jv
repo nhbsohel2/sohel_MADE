@@ -1,0 +1,246 @@
+pipeline goodsPipeline {
+    goodsExtractor -> goodsInterpreter;
+
+    goodsInterpreter
+        -> goodsCSVInterpreter 
+        -> MetaDataRemover
+        -> AddHeaderNames
+        -> RenameHeader
+        -> goodsTableInterpreter
+        -> Jan
+        -> Feb
+        -> Mar
+        -> Apr
+        -> May
+        -> June
+        -> July
+        -> Aug
+        -> Sep
+        -> Oct
+        -> Nov
+        -> Dec
+        -> goodsLoader;
+
+
+    block goodsExtractor oftype HttpExtractor {
+        url: "https://www-genesis.destatis.de/genesis/downloads/00/tables/46131-0014_00.csv";
+        retries: 3;
+    }
+
+    block goodsInterpreter oftype TextFileInterpreter { 
+        encoding: "latin3";
+    }
+
+	 block goodsCSVInterpreter oftype CSVInterpreter {
+        delimiter: ";";
+        enclosing: '';
+    }
+
+    block MetaDataRemover oftype RowDeleter {
+        delete: [row 1, row 2, row 3, row 4, row 5, row 6, row 7, row 41337, row 41338, row 41339];
+    }
+
+    block AddHeaderNames oftype CellWriter {
+        at: range A1:E1;
+        write: ["year", "month", "goods_id", "goods_name", "goods_source"];
+    }
+
+    block RenameHeader oftype CellWriter {
+        at: range AT1:AU1;
+        write: ["abroad", "total"];
+    }
+
+    constraint monthReg oftype RegexConstraint {
+        regex: /\b(Januar|Februar|März|April|Mai|Juni|Juli|August|September|Oktober|November|Dezember)\b/;
+    }
+
+    constraint goodsIDReg oftype RegexConstraint {
+        regex: /^NST7-[0-9A-Z]{3}$/;
+    }
+
+    constraint Positive oftype RangeConstraint {
+        lowerBound: 0;
+        lowerBoundInclusive: true;
+    }
+
+    valuetype gText oftype text {
+        constraints: [monthReg,];
+    }
+
+    valuetype pInteger oftype integer {
+        constraints: [Positive,];
+    }
+
+    valuetype gID oftype text {
+        constraints: [goodsIDReg,];
+    }
+
+  transform cJan {
+        from prev oftype text;
+        to new oftype text;
+
+        new:  prev replace /Januar/ with 'JANUAR' ;
+    }
+
+    block Jan oftype TableTransformer {
+        inputColumns: ["month"];
+        outputColumn: "month";
+        use: cJan;
+    }
+
+   transform cFeb {
+        from prev oftype text;
+        to new oftype text;
+
+        new:  prev replace /Februar/ with 'FEBRUAR' ;
+    }
+
+    block Feb oftype TableTransformer {
+        inputColumns: ["month"];
+        outputColumn: "month";
+        use: cFeb;
+    }
+
+	transform cMar {
+        from prev oftype text;
+        to new oftype text;
+
+        new:  prev replace /März/ with 'MÄRZ' ;
+    }
+
+    block Mar oftype TableTransformer {
+        inputColumns: ["month"];
+        outputColumn: "month";
+        use: cMar;
+    }
+  transform cApr {
+        from prev oftype text;
+        to new oftype text;
+
+        new:  prev replace /April/ with 'APRIL' ;
+    }
+    block Apr oftype TableTransformer {
+        inputColumns: ["month"];
+        outputColumn: "month";
+        use: cApr;
+    }
+
+
+    transform cMay {
+        from prev oftype text;
+        to new oftype text;
+
+        new:  prev replace /Mai/ with 'MAI' ;
+    }
+
+    block May oftype TableTransformer {
+        inputColumns: ["month"];
+        outputColumn: "month";
+        use: cMay;
+    }
+
+transform cJune {
+        from prev oftype text;
+        to new oftype text;
+
+        new:  prev replace /Juni/ with 'JUNI' ;
+    }
+    block June oftype TableTransformer {
+        inputColumns: ["month"];
+        outputColumn: "month";
+        use: cJune;
+    }
+  transform cJul {
+        from prev oftype text;
+        to new oftype text;
+
+        new:  prev replace /Juli/ with 'JULI' ;
+    }
+
+    block July oftype TableTransformer {
+        inputColumns: ["month"];
+        outputColumn: "month";
+        use: cJul;
+    }
+ transform cAug {
+        from prev oftype text;
+        to new oftype text;
+
+        new:  prev replace /August/ with 'AUGUST' ;
+    }
+    block Aug oftype TableTransformer {
+        inputColumns: ["month"];
+        outputColumn: "month";
+        use: cAug;
+    }
+
+    transform cSep {
+        from prev oftype text;
+        to new oftype text;
+
+        new:  prev replace /September/ with 'SEPTEMBER' ;
+    }
+    block Sep oftype TableTransformer {
+        inputColumns: ["month"];
+        outputColumn: "month";
+        use: cSep;
+    }
+   transform cOct {
+        from prev oftype text;
+        to new oftype text;
+
+        new:  prev replace /Oktober/ with 'OKTOBER' ;
+    }
+
+    block Oct oftype TableTransformer {
+        inputColumns: ["month"];
+        outputColumn: "month";
+        use: cOct;
+    }
+
+    transform cNov {
+        from prev oftype text;
+        to new oftype text;
+
+        new:  prev replace /November/ with 'NOVEMBER' ;
+    }
+    block Nov oftype TableTransformer {
+        inputColumns: ["month"];
+        outputColumn: "month";
+        use: cNov;
+    }
+ 
+
+    transform cDec {
+        from prev oftype text;
+        to new oftype text;
+
+        new:  prev replace /Dezember/ with 'DEZEMBER' ;
+    }
+
+    block Dec oftype TableTransformer {
+        inputColumns: ["month"];
+        outputColumn: "month";
+        use: cDec;
+    }
+
+   
+
+    block goodsTableInterpreter oftype TableInterpreter {
+        header: true;
+        columns: [
+            "year" oftype pInteger,
+            "month" oftype gText,
+            "goods_id" oftype gID,
+            "goods_name" oftype text,
+            "goods_source" oftype text,
+            "abroad" oftype pInteger,
+            "total" oftype pInteger
+        ];
+    }
+
+    block goodsLoader oftype SQLiteLoader {
+        table: "goods";
+        file: "./goodsTransportedByTrain.sqlite";
+    }
+}
