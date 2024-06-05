@@ -24,8 +24,8 @@ Climate change poses a significant threat to global agriculture, affecting crop 
 This dataset contains detailed statistics on crop production across various countries.We will use only european countries data.
 
 ### Datasource2:
-* Metadata URL: https://www.kaggle.com/datasets/berkeleyearth/climate-change-earth-surface-temperature-data
-* Data URL: https://www.kaggle.com/datasets/berkeleyearth/climate-change-earth-surface-temperature-data?select=GlobalLandTemperaturesByCountry.csv
+* Metadata URL:  http://www.fao.org/faostat/en/#data/ET/metadata
+* Data URL: https://fenixservices.fao.org/faostat/static/bulkdownloads/Environment_Temperature_change_E_All_Data.zip
 * Data Type: CSV
 
 This dataset provides global land temperature. It offers a comprehensive view of climatic conditions over time.We will use data for european countries.
