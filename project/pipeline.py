@@ -6,6 +6,16 @@ import requests
 import zipfile
 from io import BytesIO
 
+# List of European countries
+european_countries = [
+    'Albania', 'Andorra', 'Armenia', 'Austria', 'Azerbaijan', 'Belarus', 'Belgium', 'Bosnia and Herzegovina',
+    'Bulgaria', 'Croatia', 'Cyprus', 'Czech Republic', 'Denmark', 'Estonia', 'Finland', 'France', 'Georgia',
+    'Germany', 'Greece', 'Hungary', 'Iceland', 'Ireland', 'Italy', 'Kazakhstan', 'Kosovo', 'Latvia', 'Liechtenstein',
+    'Lithuania', 'Luxembourg', 'Malta', 'Moldova', 'Monaco', 'Montenegro', 'Netherlands', 'North Macedonia', 'Norway',
+    'Poland', 'Portugal', 'Romania', 'Russia', 'San Marino', 'Serbia', 'Slovakia', 'Slovenia', 'Spain', 'Sweden',
+    'Switzerland', 'Turkey', 'Ukraine', 'United Kingdom', 'Vatican City'
+]
+
 def download_and_extract_zip(url, headers=None):
     response = requests.get(url, headers=headers)
     response.raise_for_status()
@@ -15,7 +25,7 @@ def download_and_extract_zip(url, headers=None):
             df = pd.read_csv(file, encoding='latin1')
             return df.dropna()
 
-def save_dataframe_to_sqlite(df, table_name, db_path='../data/temperature.sqlite'):
+def save_dataframe_to_sqlite(df, table_name, db_path='../data/dataset.sqlite'):
     try:
         os.makedirs(os.path.dirname(db_path), exist_ok=True)
         abs_db_path = os.path.abspath(db_path)
@@ -25,8 +35,8 @@ def save_dataframe_to_sqlite(df, table_name, db_path='../data/temperature.sqlite
     except Exception as e:
         print(f"An error occurred: {e}")
 
-def process_temperature_data(df, food_countries):
-    df = df[df['Area'].isin(food_countries)]
+def process_temperature_data(df):
+    df = df[df['Area'].isin(european_countries)]
     df = df[df['Element'] == 'Temperature change']
     df = df.drop(['Area Code', 'Area Code (M49)', 'Element Code', 'Months Code', 'Unit', 'Element'], axis=1)
     years = range(1961, 2023)
@@ -35,11 +45,11 @@ def process_temperature_data(df, food_countries):
         df = df.drop(f'Y{year}F', axis=1)
 
     year_columns = [f'Y{year}' for year in years]
-    df = pd.melt(df, id_vars=['Area', ], value_vars=year_columns, var_name='Year', value_name='Change')
+    df = pd.melt(df, id_vars=['Area'], value_vars=year_columns, var_name='Year', value_name='Change')
     df['Year'] = df['Year'].str[1:].astype(int)
     return df
 
-def load_data_from_sqlite(table_name, db_path='../data/temperature.sqlite'):
+def load_data_from_sqlite(table_name, db_path='../data/dataset.sqlite'):
     abs_db_path = os.path.abspath(db_path)
     engine = create_engine(f'sqlite:///{abs_db_path}')
     df = pd.read_sql_table(table_name, con=engine)
@@ -62,17 +72,16 @@ def download_kaggle_dataset(dataset_name, username, key):
     # Select only the desired columns
     df = df[['Area', 'year', 'value']]
 
+    # Filter for European countries
+    df = df[df['Area'].isin(european_countries)]
+
     # Remove rows with missing values
     df = df.dropna()
 
-    # Get unique countries from the food dataset
-    food_countries = df['Area'].unique()
-
     # Save the DataFrame to SQLite
-    engine = create_engine('sqlite:///../data/food.sqlite')
-    df.to_sql('kaggle_data', engine, if_exists='replace', index=False)
+    save_dataframe_to_sqlite(df, 'food_data', db_path='../data/dataset.sqlite')
 
-    return food_countries
+    return df['Area'].unique()
 
 def main():
     # Kaggle credentials
@@ -86,11 +95,12 @@ def main():
     # Process temperature data
     temperature_url = 'https://fenixservices.fao.org/faostat/static/bulkdownloads/Environment_Temperature_change_E_All_Data.zip'
     temperature_df = download_and_extract_zip(temperature_url, headers={'User-Agent': 'Mozilla/5.0'})
-    processed_temp_df = process_temperature_data(temperature_df, food_countries)
-    save_dataframe_to_sqlite(processed_temp_df, 'processed_temperature')
+    processed_temp_df = process_temperature_data(temperature_df)
+    save_dataframe_to_sqlite(processed_temp_df, 'temperature_data', db_path='../data/dataset.sqlite')
 
     # Load the processed data for visualization
-    processed_temp_df = load_data_from_sqlite('processed_temperature')
+    food_df = load_data_from_sqlite('food_data')
+    processed_temp_df = load_data_from_sqlite('temperature_data')
 
 if __name__ == '__main__':
     main()
