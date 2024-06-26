@@ -27,5 +27,11 @@ jobs:
       - name: Ensure test.sh is executable
         run: chmod +x project/test.sh
 
+      - name: Set up Kaggle API credentials
+        run: |
+          mkdir -p ~/.kaggle
+          echo '{"username":"${{ secrets.KAGGLE_USERNAME }}","key":"${{ secrets.KAGGLE_KEY }}"}' > ~/.kaggle/kaggle.json
+          chmod 600 ~/.kaggle/kaggle.json
+
       - name: Run test
         run: ./project/test.sh
