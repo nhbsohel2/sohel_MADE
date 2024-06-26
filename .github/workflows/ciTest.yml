@@ -27,5 +27,5 @@ jobs:
       - name: Ensure test.sh is executable
         run: chmod +x project/test.sh
 
-      - name: Run tests
+      - name: Run test
         run: ./project/test.sh
