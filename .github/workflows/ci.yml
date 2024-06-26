@@ -15,7 +15,7 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@v2
         with:
-          python-version: '3.8'  # Specify the Python version to use
+          python-version: '3.8'
 
       - name: Install dependencies
         run: |
@@ -24,7 +24,8 @@ jobs:
           pip install --upgrade pip
           pip install -r project/requirements.txt
 
+      - name: Ensure tests.sh is executable
+        run: chmod +x project/test.sh
+
       - name: Run tests
-        run: |
-          chmod +x project/test.sh
-          ./project/test.sh
+        run: ./project/test.sh
