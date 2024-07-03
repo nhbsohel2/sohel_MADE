@@ -7,7 +7,7 @@
 ## Main Question
 
 
-Assess how temperature change is affecting agricultural productivity and the economy in european countries.
+Assess how temperature change is affecting agricultural productivity in european countries.
 
 ## Description
 
